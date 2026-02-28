@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Sync to upstream Luau 0.710
 
+### Fixed
+
+- Fixed inlay hints showing `: (())` instead of `: ()` for functions returning empty type packs ([#1381](https://github.com/JohnnyMorganz/luau-lsp/issues/1381))
+
 ## [1.62.0] - 2026-02-14
 
 ### Added
