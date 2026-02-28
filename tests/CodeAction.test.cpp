@@ -20,8 +20,8 @@ TEST_SUITE_BEGIN("CodeAction");
 TEST_CASE_FIXTURE(Fixture, "organise_imports_action_is_returned")
 {
     auto uri = newDocument("test.luau", R"(
-        local b = require("./b.luau")
-        local a = require("./a.luau")
+        local b = require("./b")
+        local a = require("./a")
     )");
 
     lsp::CodeActionParams params;
@@ -189,7 +189,7 @@ print("hello")
 TEST_CASE_FIXTURE(Fixture, "import_unused_prefix_fix")
 {
     auto uri = newDocument("test.luau", R"(
-local unused = require("./foo.luau")
+local unused = require("./foo")
 print("hello")
 )");
 
@@ -213,7 +213,7 @@ print("hello")
 TEST_CASE_FIXTURE(Fixture, "import_unused_delete_fix")
 {
     auto uri = newDocument("test.luau", R"(
-local unused = require("./foo.luau")
+local unused = require("./foo")
 print("hello")
 )");
 
@@ -400,7 +400,7 @@ return {}
     workspace.frontend.check(workspace.fileResolver.getModuleName(moduleUri));
 
     auto uri = newDocument("test.luau", R"(
-local foo = require("./foo.luau")
+local foo = require("./foo")
 local x = OtherModule
 )");
 

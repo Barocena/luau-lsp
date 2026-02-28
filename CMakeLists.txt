@@ -57,6 +57,7 @@ target_sources(Luau.LanguageServer PRIVATE
         src/JsonTomlSyntaxParser.cpp
         src/CliConfigurationParser.cpp
         src/platform/AutoImports.cpp
+        src/platform/LSPNavigationContext.cpp
         src/platform/LSPPlatform.cpp
         src/platform/StringRequireAutoImporter.cpp
         src/platform/StringRequireSuggester.cpp
@@ -197,7 +198,7 @@ target_compile_definitions(Luau.LanguageServer PUBLIC -DLSP_VERSION="${LSP_VERSI
 target_compile_definitions(Luau.LanguageServer PUBLIC -DLSP_NAME="${LSP_NAME}")
 target_include_directories(Luau.LanguageServer PUBLIC src/include)
 target_include_directories(Luau.LanguageServer SYSTEM PUBLIC ${EXTERN_INCLUDES})
-target_link_libraries(Luau.LanguageServer PRIVATE Luau.Ast Luau.Analysis Luau.Compiler Luau.VM Luau.CodeGen)
+target_link_libraries(Luau.LanguageServer PRIVATE Luau.Ast Luau.Analysis Luau.Compiler Luau.VM Luau.CodeGen Luau.Require)
 
 set_target_properties(Luau.LanguageServer.CLI PROPERTIES OUTPUT_NAME luau-lsp)
 target_compile_features(Luau.LanguageServer.CLI PUBLIC cxx_std_17)
