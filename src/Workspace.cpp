@@ -534,7 +534,8 @@ void WorkspaceFolder::registerTypes(const std::vector<std::string>& disabledGlob
             // Clear any set diagnostics
             client->publishDiagnostics({uri, std::nullopt, {}});
             TextDocument textDocument(Uri::file(resolvedFilePath), "luau", 0, *definitionsContents);
-            definitionsSourceModules.emplace(packageName, std::make_pair(textDocument, result.sourceModule));
+            definitionsFileState.emplace(
+                packageName, DefinitionsFileState{std::move(textDocument), result.sourceModule, std::move(result.module)});
         }
         else
         {
