@@ -171,25 +171,19 @@ TEST_CASE("support_disabling_methods_in_extern_types_globals")
     CHECK_EQ(err->key, "BindToClose");
 }
 
-TEST_CASE("type_functions_in_definition_files_work")
+TEST_CASE_FIXTURE(Fixture, "type_functions_in_definition_files_work")
 {
-    ScopedFastFlag sff{FFlag::LuauSolverV2, true};
+    ENABLE_NEW_SOLVER();
 
-    Client client;
-    auto workspace = WorkspaceFolder(&client, "$TEST_WORKSPACE", Uri::file(*Luau::FileUtils::getCurrentWorkingDirectory()), std::nullopt);
-
-    client.definitionsFiles.emplace("@test", "./tests/testdata/type_function_definitions.d.luau");
-
-    auto config = defaultTestClientConfiguration();
-    workspace.setupWithConfiguration(config);
-    workspace.frontend.setLuauSolverMode(Luau::SolverMode::New);
-    workspace.isReady = true;
-
-    auto document = newDocument(workspace, "foo.luau", R"(
-        local x: foo<number> = nil :: any
+    loadDefinition("@test", R"(
+        export type function foo(ty)
+            return types.negationof(ty)
+        end
     )");
 
-    auto result = workspace.frontend.check(workspace.fileResolver.getModuleName(document));
+    auto result = check(R"(
+        local x: foo<number> = nil :: any
+    )");
     REQUIRE(result.errors.empty());
 }
 
