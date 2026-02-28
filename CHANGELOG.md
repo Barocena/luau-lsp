@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Documentation for built-in Luau functions (e.g. `math.abs`, `table.find`) is now provided in standard platform mode ([#1357](https://github.com/JohnnyMorganz/luau-lsp/issues/1357))
+
 ### Changed
 
 - Sync to upstream Luau 0.710
