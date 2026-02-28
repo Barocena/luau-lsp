@@ -107,31 +107,6 @@ std::optional<Uri> resolveAlias(const std::string& path, const Luau::Config& con
         return resolvedUri.resolvePath(remainder);
 }
 
-// DEPRECATED: Resolve the string using a directory alias if present
-std::optional<Uri> resolveDirectoryAlias(
-    const Uri& rootUri, const std::unordered_map<std::string, std::string>& directoryAliases, const std::string& str)
-{
-    for (const auto& [alias, directoryPath] : directoryAliases)
-    {
-        if (Luau::startsWith(str, alias))
-        {
-            std::string remainder = str.substr(alias.length());
-
-            // If remainder begins with a '/' character, we need to trim it off before it gets mistaken for an
-            // absolute path
-            remainder.erase(0, remainder.find_first_not_of("/\\"));
-
-            auto filePath = resolvePath(remainder.empty() ? directoryPath : Luau::FileUtils::joinPaths(directoryPath, remainder));
-            if (Luau::FileUtils::isAbsolutePath(filePath))
-                return Uri::file(filePath);
-            else
-                return rootUri.resolvePath(filePath);
-        }
-    }
-
-    return std::nullopt;
-}
-
 std::optional<Luau::ModuleInfo> LSPPlatform::resolveStringRequire(
     const Luau::ModuleInfo* context, const std::string& requiredString, const Luau::TypeCheckLimits& limits)
 {
@@ -163,20 +138,6 @@ std::optional<Luau::ModuleInfo> LSPPlatform::resolveStringRequire(
     if (auto aliasedPath = resolveAlias(requiredString, luauConfig, *contextPath->parent()))
     {
         fileUri = aliasedPath.value();
-    }
-    // DEPRECATED: Check for custom require overrides
-    else if (fileResolver->client)
-    {
-        // Check file aliases
-        if (auto it = clientConfig.require.fileAliases.find(requiredString); it != clientConfig.require.fileAliases.end())
-        {
-            fileUri = Uri::file(resolvePath(it->second));
-        }
-        // Check directory aliases
-        else if (auto directoryAliasedPath = resolveDirectoryAlias(fileResolver->rootUri, clientConfig.require.directoryAliases, requiredString))
-        {
-            fileUri = *directoryAliasedPath;
-        }
     }
 
     // Handle "init.luau" files in a directory

@@ -143,6 +143,3 @@ public:
 
 Uri resolveAliasLocation(const Luau::Config::AliasInfo& aliasInfo);
 std::optional<Uri> resolveAlias(const std::string& path, const Luau::Config& config, const Uri& from);
-
-std::optional<Uri> resolveDirectoryAlias(
-    const Uri& rootPath, const std::unordered_map<std::string, std::string>& directoryAliases, const std::string& str);
